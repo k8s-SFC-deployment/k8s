@@ -1,0 +1,92 @@
+prometheus:
+  url: http://prometheus.monitoring.svc.cluster.local
+  port: 9090
+  path: /prometheus
+rules:
+  default: false
+  custom:
+    # - seriesQuery: '{__name__=~"^container_.*",container!="POD",namespace!="",pod!=""}'
+    #   resources:
+    #     # skip specifying generic resource<->label mappings, and just
+    #     # attach only pod and namespace resources by mapping label names to group-resources
+    #     overrides:
+    #       namespace: {resource: "namespace"}
+    #   # specify that the `container_` and `_seconds_total` suffixes should be removed.
+    #   # this also introduces an implicit filter on metric family names
+    #   name:
+    #     # we use the value of the capture group implicitly as the API name
+    #     # we could also explicitly write `as: "$1"`
+    #     matches: "^container_(.*)$"
+    #   # specify how to construct a query to fetch samples for a given series
+    #   # This is a Go template where the `.Series` and `.LabelMatchers` string values
+    #   # are available, and the delimiters are `<<` and `>>` to avoid conflicts with
+    #   # the prometheus query language
+    #   metricsQuery: 'sum(rate(<<.Series>>{<<.LabelMatchers>>,container!="POD"}[2m])) by (pod)'
+
+    - seriesQuery: '{__name__="container_network_receive_bytes_total",pod!="",namespace!=""}'
+      resources:
+        overrides: 
+          namespace:
+            resource: namespace
+          pod:
+            resource: pod
+      name:
+        as: "in_out_bytes_total"
+      metricsQuery: sum(rate(container_network_receive_bytes_total{<<.LabelMatchers>>}[1m]) + rate(container_network_transmit_bytes_total{<<.LabelMatchers>>}[1m])) by (pod)
+
+    - seriesQuery: '{__name__=~"^container_blkio_device_usage_total$"}'
+      resources:
+        template: <<.Resource>>
+      name:
+        as: "blkio"
+      metricsQuery: |
+        sum(irate(<<.Series>>{<<.LabelMatchers>>}[1m])) by (<<.GroupBy>>)
+  # external: []
+    # - seriesQuery: '{__name__=~"^some_metric_count$"}'
+    #   resources:
+    #     template: <<.Resource>>
+    #   name:
+    #     matches: ""
+    #     as: "my_external_metric"
+    #   metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (<<.GroupBy>>)
+
+  # resource:
+  #   cpu:
+  #     containerQuery: |
+  #       sum by (<<.GroupBy>>) (
+  #         rate(container_cpu_usage_seconds_total{container!="",<<.LabelMatchers>>}[3m])
+  #       )
+  #     nodeQuery: |
+  #       sum  by (<<.GroupBy>>) (
+  #         rate(node_cpu_seconds_total{mode!="idle",mode!="iowait",mode!="steal",<<.LabelMatchers>>}[3m])
+  #       )
+  #     resources:
+  #       overrides:
+  #         node:
+  #           resource: node
+  #         namespace:
+  #           resource: namespace
+  #         pod:
+  #           resource: pod
+  #     containerLabel: container
+  #   memory:
+  #     containerQuery: |
+  #       sum by (<<.GroupBy>>) (
+  #         avg_over_time(container_memory_working_set_bytes{container!="",<<.LabelMatchers>>}[3m])
+  #       )
+  #     nodeQuery: |
+  #       sum by (<<.GroupBy>>) (
+  #         avg_over_time(node_memory_MemTotal_bytes{<<.LabelMatchers>>}[3m])
+  #         -
+  #         avg_over_time(node_memory_MemAvailable_bytes{<<.LabelMatchers>>}[3m])
+  #       )
+  #     resources:
+  #       overrides:
+  #         node:
+  #           resource: node
+  #         namespace:
+  #           resource: namespace
+  #         pod:
+  #           resource: pod
+  #     containerLabel: container
+  #   window: 3m
