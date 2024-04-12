@@ -11,14 +11,14 @@ spec:
   - host: <Please Replace>
     http:
       paths:
-      - path: /firewall
+      - path: /firewall-vnf
         pathType: Prefix
         backend:
           service:
             name: firewall-vnf
             port:
               number: 80
-      - path: /ids
+      - path: /ids-vnf
         pathType: Prefix
         backend:
           service:
