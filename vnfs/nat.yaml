@@ -1,0 +1,28 @@
+image:
+  pullPolicy: Always
+
+envs:
+  CPU_OPS: 5000
+  CPU_WORKER: 1
+  CPU_LIMIT: 50
+  MEM_OPS: 10000
+  MEM_WORKER: 1
+  MEM_BYTES: 100000
+  DIO_OPS: 0
+  DIO_WORKER: 0
+  DIO_BYTES: 0
+
+resources:
+  limits:
+    cpu: "1"
+    memory: "1Gi"
+  requests:
+    cpu: "1"
+    memory: "1Gi"
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetMemoryUtilizationPercentage: 50
+  targetCPUUtilizationPercentage: 50

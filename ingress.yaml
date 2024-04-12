@@ -11,18 +11,11 @@ spec:
   - host: <Please Replace>
     http:
       paths:
-      - path: /firewall-vnf
+      - path: /sfc-e2e-collector
         pathType: Prefix
         backend:
           service:
-            name: firewall-vnf
-            port:
-              number: 80
-      - path: /ids-vnf
-        pathType: Prefix
-        backend:
-          service:
-            name: ids-vnf
+            name: sfc-e2e-collector
             port:
               number: 80
       - path: /grafana

@@ -35,13 +35,24 @@ master@user:~$ helm repo add cilium https://helm.cilium.io/
 master@user:~/k8s$ helm install cilium cilium/cilium --version 1.15.2 -n kube-system -f externals/cilium/values.yaml
 ```
 
-### 3. Deploy Firewall and IDS
+### 3. Deploy VNFS and SFC-E2E-Collector
 
 ```bash
 master@user:~/k8s$ kubectl create ns testbed
+
 master@user:~/k8s$ helm repo add vnf-scc-sfc https://k8s-sfc-deployment.github.io/VNF-SCC-SFC
-master@user:~/k8s$ helm install firewall-vnf vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/firewall-value.yaml
-master@user:~/k8s$ helm install ids-vnf vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/ids-value.yaml
+master@user:~/k8s$ helm install vnf-account-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/account.yaml
+master@user:~/k8s$ helm install vnf-firewall-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/firewall.yaml
+master@user:~/k8s$ helm install vnf-firewall-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/firewall.yaml
+master@user:~/k8s$ helm install vnf-host-id-injection-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/host-id-injection.yaml
+master@user:~/k8s$ helm install vnf-ids-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/ids.yaml
+master@user:~/k8s$ helm install vnf-ids-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/ids.yaml
+master@user:~/k8s$ helm install vnf-nat-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/nat.yaml
+master@user:~/k8s$ helm install vnf-nat-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/nat.yaml
+master@user:~/k8s$ helm install vnf-registry-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/registry.yaml
+master@user:~/k8s$ helm install vnf-tcp-optimizer-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/tcp-optimizer.yaml
+
+master@user:~/k8s$ kubectl apply -f sfc-e2e-collector.yaml
 ```
 
 ### 4. Deploy Ingress-Nginx Baremetal
