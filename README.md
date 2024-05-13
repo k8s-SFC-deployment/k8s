@@ -147,7 +147,7 @@ targets:
 
 ```bash
 master@user:~/k8s$ helm repo add nmbn-exporter https://k8s-sfc-deployment.github.io/nmbn-exporter
-master@user:~/k8s$ helm install nmbn-exporter nmbn-exporter/nmbn-exporter -n nmbn-exporter -f nmbn-exporter/value.yaml
+master@user:~/k8s$ helm install nmbn-exporter nmbn-exporter/nmbn-exporter --version 0.0.2 -n nmbn-exporter --create-namespace -f nmbn-exporter/value.yaml
 ```
 
 ### 7. [AutoScaler Metric Server] Metrics Server
