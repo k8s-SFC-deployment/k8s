@@ -52,15 +52,26 @@ master@user:~/k8s$ kubectl label ns testbed istio-injection=enabled
 master@user:~/k8s$ helm repo add vnf-scc-sfc https://k8s-sfc-deployment.github.io/VNF-SCC-SFC
 
 master@user:~/k8s$ helm install vnf-account-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/account.yaml --set nameOverride=vnf-account-0
+master@user:~/k8s$ helm install vnf-account-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/account.yaml --set nameOverride=vnf-account-1
 master@user:~/k8s$ helm install vnf-firewall-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/firewall.yaml --set nameOverride=vnf-firewall-0
-master@user:~/k8s$ helm install vnf-firewall-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/firewall.yaml --set nameOverride=vnf-firewall-1
 master@user:~/k8s$ helm install vnf-host-id-injection-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/host-id-injection.yaml --set nameOverride=vnf-host-id-injection-0
 master@user:~/k8s$ helm install vnf-ids-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/ids.yaml --set nameOverride=vnf-ids-0
-master@user:~/k8s$ helm install vnf-ids-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/ids.yaml --set nameOverride=vnf-ids-1
 master@user:~/k8s$ helm install vnf-nat-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/nat.yaml --set nameOverride=vnf-nat-0
-master@user:~/k8s$ helm install vnf-nat-1 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/nat.yaml --set nameOverride=vnf-nat-1
+master@user:~/k8s$ helm install vnf-observer-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/observer.yaml --set nameOverride=vnf-observer-0
 master@user:~/k8s$ helm install vnf-registry-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/registry.yaml --set nameOverride=vnf-registry-0
+master@user:~/k8s$ helm install vnf-session-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/session.yaml --set nameOverride=vnf-session-0
 master@user:~/k8s$ helm install vnf-tcp-optimizer-0 vnf-scc-sfc/vnf-scc-sfc -n testbed -f vnfs/tcp-optimizer.yaml --set nameOverride=vnf-tcp-optimizer-0
+
+helm uninstall vnf-account-0  -n testbed
+helm uninstall vnf-account-1  -n testbed
+helm uninstall vnf-firewall-0  -n testbed
+helm uninstall vnf-host-id-injection-0  -n testbed
+helm uninstall vnf-ids-0  -n testbed
+helm uninstall vnf-nat-0  -n testbed
+helm uninstall vnf-observer-0  -n testbed
+helm uninstall vnf-registry-0  -n testbed
+helm uninstall vnf-session-0  -n testbed
+helm uninstall vnf-tcp-optimizer-0  -n testbed
 
 master@user:~/k8s$ helm repo add sfc-e2e-collector https://k8s-sfc-deployment.github.io/SFC-E2E-collector
 master@user:~/k8s$ helm install sfc-e2e-collector sfc-e2e-collector/sfc-e2e-collector -n testbed -f sfc-e2e-collector/value.yaml
@@ -125,7 +136,7 @@ master@user:~/k8s$ cilium status # wait until hubble-ui wake up
 
 ```bash
 master@user:~/k8s$ helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-master@user:~/k8s$ helm install -n node-exporter --create-namespace --version 1.7.0 -f externals/node-exporter/value.yaml
+master@user:~/k8s$ helm install node-exporter prometheus-community/prometheus-node-exporter -n node-exporter --create-namespace --version 1.7.0 -f externals/node-exporter/value.yaml
 ```
 
 ### 5. [Prometheus Exporter 3] Kepler
@@ -135,7 +146,14 @@ master@user:~/k8s$ helm repo add kepler https://sustainable-computing-io.github.
 master@user:~/k8s$ helm install kepler kepler/kepler -n kepler --create-namespace --version release-0.7.8 -f externals/kepler/value.yaml
 ```
 
-### 6. [Prometheus Exporter 4] Custom Exporter - NMBN Exporter
+### 6. [Prometheus Exporter 4] PowerTop Exporter
+
+```bash
+master@user:~/k8s$ kubectl create ns powertop-exporter
+master@user:~/k8s$ kubectl apply -f externals/powertop-exporter
+```
+
+### 7. [Prometheus Exporter 5] Custom Exporter - NMBN Exporter
 
 Open [`/k8s/nmbn-exporter/value.yaml`](/k8s/nmbn-exporter/value.yaml) and fill below part to get node exporter information
 
@@ -150,7 +168,7 @@ master@user:~/k8s$ helm repo add nmbn-exporter https://k8s-sfc-deployment.github
 master@user:~/k8s$ helm install nmbn-exporter nmbn-exporter/nmbn-exporter --version 0.0.2 -n nmbn-exporter --create-namespace -f nmbn-exporter/value.yaml
 ```
 
-### 7. [AutoScaler Metric Server] Metrics Server
+### 8. [AutoScaler Metric Server] Metrics Server
 
 - now I use metrics-server for horizontal auto scaling
 
@@ -158,7 +176,7 @@ master@user:~/k8s$ helm install nmbn-exporter nmbn-exporter/nmbn-exporter --vers
 master@user:~/k8s$ kubectl apply -f externals/metrics-server
 ```
 
-### 8. [Optional] ISTIO Addon
+### 9. [Optional] ISTIO Addon
 
 you also can use istio addon, this repo have [`/k8s/externals/istio/addons`](/k8s/externals/istio/addons).
 
@@ -193,3 +211,47 @@ master@user:~/k8s$ istioctl dashboard prometheus
 - `cilium`: v1.15.2
 - `node-exporter`: 1.7.0
 - `kepler`: release-0.7.8
+
+
+## Loads
+
+### CPU
+
+|        | CPU_OPERATION_NUM | CPU_LIMIT(%) |
+|--------|-------------------|--------------|
+| High   | 1000              | 30           |
+| Middle | 250               | 30           |
+| Low    | 100               | 30           |
+
+
+
+### Memory
+
+|        | MEM_OPERATION_NUM | MEM_BYTES(b) |
+|--------|-------------------|--------------|
+| High   | 1000              | 100000       |
+| Middle | 250               | 50000        |
+| Low    | 100               | 10000        |
+
+### Disk
+
+|        | DISK_OPERATION_NUM | DISK_BYTES(b) |
+|--------|--------------------|---------------|
+| High   | 1000               | 10000000      |
+| Middle | 250                | 5000000       |
+| Low    | 100                | 2000000       |
+
+
+## VNF's load
+
+|                   | CPU  | Disk | Memory |
+|-------------------|------|------|--------|
+| Account           | mid  | mid  | mid    |
+| Firewall          | high | low  | high   |
+| Host ID injection | high | high | low    |
+| IDS               | high | high | high   |
+| NAT               | high | low  | low    |
+| Observer          | low  | low  | low    |
+| Registry          | low  | high | high   |
+| Session           | low  | high | low    |
+| TCP optimizer     | low  | low  | high   |

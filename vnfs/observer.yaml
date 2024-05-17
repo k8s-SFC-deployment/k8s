@@ -1,17 +1,17 @@
 image:
   pullPolicy: Always
 
-# load: cpu high, mem high, disk high
+# load: cpu low, mem low, disk low
 envs:
-  CPU_OPS: 1000
+  CPU_OPS: 100
   CPU_WORKER: 1
   CPU_LIMIT: 30
-  MEM_OPS: 1000
+  MEM_OPS: 100
   MEM_WORKER: 1
-  MEM_BYTES: 100000
-  DIO_OPS: 1000
+  MEM_BYTES: 10000
+  DIO_OPS: 100
   DIO_WORKER: 1
-  DIO_BYTES: 10000000
+  DIO_BYTES: 2000000
 
 resources:
   limits:

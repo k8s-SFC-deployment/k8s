@@ -1,16 +1,17 @@
 image:
   pullPolicy: Always
 
+# load : middle
 envs:
-  CPU_OPS: 500
+  CPU_OPS: 250
   CPU_WORKER: 1
-  CPU_LIMIT: 50
-  MEM_OPS: 100
+  CPU_LIMIT: 30
+  MEM_OPS: 250
   MEM_WORKER: 1
-  MEM_BYTES: 10000
-  DIO_OPS: 100
+  MEM_BYTES: 50000
+  DIO_OPS: 250
   DIO_WORKER: 1
-  DIO_BYTES: 10000000
+  DIO_BYTES: 5000000
 
 resources:
   limits:
@@ -23,6 +24,6 @@ resources:
 autoscaling:
   enabled: true
   minReplicas: 1
-  maxReplicas: 10
+  maxReplicas: 20
   targetMemoryUtilizationPercentage: 50
   targetCPUUtilizationPercentage: 50

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: powertop-exporter
+  namespace: powertop-exporter
+  labels:
+    app: powertop-exporter
+spec:
+  selector:
+    matchLabels:
+      app: powertop-exporter
+  template:
+    metadata:
+      labels:
+        app: powertop-exporter
+    spec:
+      hostNetwork: true
+      containers:
+      - name: powertop-exporter
+        image: sibseh/powertopcsv:v2
+        imagePullPolicy: Always
+        securityContext:
+          privileged: true

@@ -179,24 +179,16 @@ data:
           target_label: __address__
           replacement: $1:9102
       
-      # node-exporter
-      - job_name: 'node-exporter'
+      # powertop-exporter
+      - job_name: 'powertop-exporter'
         kubernetes_sd_configs:
         - role: node
         relabel_configs:
         - source_labels: [__address__]
           regex: ^(.*):\d+$
           target_label: __address__
-          replacement: $1:9100
-        - target_label: __scheme__
-          replacement: http
-        # Host name
-        - source_labels: [__meta_kubernetes_node_name]
-          target_label: instance
-        # Extract some labels
-        - source_labels: [__meta_kubernetes_node_label_failure_domain_beta_kubernetes_io_zone]
-          target_label: zone
-      
+          replacement: $1:8887
+
       # nmbn-exporter
       - job_name: 'nmbn-exporter'
         kubernetes_sd_configs:
@@ -211,9 +203,6 @@ data:
         # Host name
         - source_labels: [__meta_kubernetes_node_name]
           target_label: instance
-        # Extract some labels
-        - source_labels: [__meta_kubernetes_node_label_failure_domain_beta_kubernetes_io_zone]
-          target_label: zone
     storage:
       exemplars:
         max_exemplars: 100000

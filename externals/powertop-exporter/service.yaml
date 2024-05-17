@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: powertop-exporter
+  namespace: powertop-exporter
+  labels:
+    app: powertop-exporter
+spec:
+  type: ClusterIP
+  selector:
+    app: powertop-exporter
+  ports:
+  - name: metrics
+    port: 8887
+    protocol: TCP
+    targetPort: 8887
