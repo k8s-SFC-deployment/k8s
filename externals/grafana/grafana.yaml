@@ -396,9 +396,6 @@ spec:
             - mountPath: /configmap/dashboards/kepler
               name: kepler
               readOnly: true
-            - mountPath: /configmap/dashbooards/node-exporter
-              name: node-exporter
-              readOnly: true
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       volumes:
@@ -433,7 +430,3 @@ spec:
             defaultMode: 420
             name: grafana-kepler
           name: kepler
-        - configMap:
-            defaultMode: 420
-            name: grafana-node-exporter
-          name: node-exporter
