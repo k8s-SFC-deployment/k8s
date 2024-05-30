@@ -2,3 +2,10 @@ env:
   ROOT_PATH: /sfc-e2e-collector
 image:
   pullPolicy: Always
+resources:
+  limits:
+    cpu: "2"
+    memory: "2Gi"
+  requests:
+    cpu: "1"
+    memory: "1Gi"
