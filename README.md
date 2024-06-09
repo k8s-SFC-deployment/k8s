@@ -180,9 +180,7 @@ master@user:~/k8s$ istioctl dashboard prometheus
 - Prometheus  
   http://\<ingress-host\>:\<nodePort-http-port\>/prometheus/graph
 - Firewall API  
-  http://\<ingress-host\>:\<nodePort-http-port\>/firewall/docs
-- IDS API  
-  http://\<ingress-host\>:\<nodePort-http-port\>/ids/docs
+  http://\<ingress-host\>:\<nodePort-http-port\>/sfc-e2e-collector/docs
 
 
 ## Externals
@@ -191,7 +189,6 @@ master@user:~/k8s$ istioctl dashboard prometheus
 - `kubernetes-dashboard`: v2.7.0
 - `cilium`: v1.15.2
 - `node-exporter`: 1.7.0
-- `kepler`: release-0.7.8
 
 
 ## Loads
